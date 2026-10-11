@@ -1,4 +1,6 @@
 ﻿using Fiap.Users.Domain.Entity;
+using Fiap.Users.Domain.Entity.Enum;
+using Fiap.Users.Domain.Event;
 using Fiap.Users.Domain.Repositories;
 using Fiap.Users.Domain.Services.Extensions;
 using Fiap.Users.Domain.Services.Interface;
@@ -26,8 +28,6 @@ namespace Fiap.Users.Domain.Services
         query = query.Where(a => a.Ativo == ativo);
 
       query = query.Skip(offSet).Take(limit);
-
-      _rabbitMQ.SendMessageAsync("Usuario Consultado Com Sucesso....");
 
       return query.ToList();
     }
@@ -58,6 +58,15 @@ namespace Fiap.Users.Domain.Services
       _usuarioRepository.Add(usuario);
 
       _usuarioRepository.Commit();
+
+      var result = new EventResult<UsuarioEvent>
+      {
+         Key = Guid.NewGuid(),
+         Event = "UserCreatedEvent",
+         Data = new UsuarioEvent(usuario.Nome, usuario.Email)
+      };
+
+      _rabbitMQ.SendMessageAsync("user-created-event", result);
     }
 
     public void Alterar(Usuario usuarioExistente, string? nome, string? email, string? senha, bool ativo)

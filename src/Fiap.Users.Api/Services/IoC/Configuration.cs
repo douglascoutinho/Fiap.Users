@@ -1,4 +1,5 @@
-﻿using Fiap.Users.Domain.Services.Interface;
+﻿using Fiap.Users.Domain.Repositories;
+using Fiap.Users.Domain.Services.Interface;
 using Fiap.Users.Infra.Repositories;
 
 namespace Fiap.Users.Api.Services.IoC
@@ -17,11 +18,12 @@ namespace Fiap.Users.Api.Services.IoC
 		public static IServiceCollection RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
 		{
       //Interfaces
-      services.AddScoped<Domain.Services.Interface.IGenerateToken, GenerateToken>();
-      services.AddScoped<Domain.Services.Interface.IRabbitMQService, RabbitMQService>();
+      services.AddScoped<IGenerateToken, GenerateToken>();
+
+      services.AddScoped<IRabbitMQService, PublishService>();
 
       // Repositórios
-      services.AddScoped<Domain.Repositories.IUsuarioRepository, UsuarioRepository>();
+      services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
       // Domain Services			
       services.AddScoped<Domain.Services.UsuarioService>();
