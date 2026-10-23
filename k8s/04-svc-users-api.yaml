@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-users-api
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8091
+      targetPort: 8081
+  selector:
+    app: svc-users-api

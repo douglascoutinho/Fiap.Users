@@ -1,3 +1,4 @@
+using Fiap.Users.Api.Services.Extensions;
 using Fiap.Users.Domain.Services.Interface;
 using RabbitMQ.Client;
 using System.Text;
@@ -13,13 +14,9 @@ public class PublishService : IAsyncDisposable, IRabbitMQService
   {
     _configuration = configuration;
 
-    _factory = new ConnectionFactory()
-    {
-      HostName = _configuration["RabbitMQ:HostName"] ?? string.Empty,
-      UserName = _configuration["RabbitMQ:UserName"] ?? string.Empty,
-      Password = _configuration["RabbitMQ:Password"] ?? string.Empty,
-      AutomaticRecoveryEnabled = true
-    };
+    _factory = _configuration.CarregarConnectionFactory();
+
+    _factory.AutomaticRecoveryEnabled = true;
   }
 
   public async Task SendMessageAsync<T>(string targetQueue, T messageObject)
@@ -37,6 +34,7 @@ public class PublishService : IAsyncDisposable, IRabbitMQService
     );
 
     string jsonString = JsonSerializer.Serialize(messageObject);
+
     var messageBody = Encoding.UTF8.GetBytes(jsonString);
 
     var properties = new BasicProperties

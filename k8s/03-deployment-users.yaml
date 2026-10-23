@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-api-deployment
+  labels:
+    app: svc-users-api
+spec:
+  # SQLite é um arquivo local em cada pod: com mais de 1 réplica cada pod teria um banco diferente
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svc-users-api
+  template:
+    metadata:
+      labels:
+        app: svc-users-api
+    spec:
+      containers:
+        - name: container-users-api
+          image: douglasloc/src-api-users:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: configmap-rabbitmq
+            - secretRef:
+                name: users-data-base-credentials
+            - secretRef:
+                name: users-key-credentials
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8081"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: RABBITMQ_PASSWORD
+          readinessProbe:
+            tcpSocket:
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10

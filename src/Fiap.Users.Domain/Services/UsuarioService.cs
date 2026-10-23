@@ -1,5 +1,4 @@
 ﻿using Fiap.Users.Domain.Entity;
-using Fiap.Users.Domain.Entity.Enum;
 using Fiap.Users.Domain.Event;
 using Fiap.Users.Domain.Repositories;
 using Fiap.Users.Domain.Services.Extensions;

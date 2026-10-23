@@ -34,6 +34,8 @@ ENV ASPNETCORE_ENVIRONMENT="Development"
 USER root
 RUN mkdir -p /app/database
 
+ENV SQLITE_URL="url"	
+
 # Sobrescreve a String de Conexão para apontar para a pasta do container
 ENV ConnectionStrings__DefaultConnection="Data Source=/app/database/users_data_base.db"
 

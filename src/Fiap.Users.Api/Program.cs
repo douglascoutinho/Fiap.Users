@@ -10,19 +10,26 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+string? sqliteUrl = Environment.GetEnvironmentVariable("SQLITE_URL");
 
-var caminhoBancoLocal = Directory.GetCurrentDirectory().Replace("Fiap.Users.Api", "Fiap.Users.Infra");
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Replace("{AppDir}", $"{caminhoBancoLocal}");
+var connectionString = string.Empty;
 
-builder.Services.AddDbContext<Contexto>(options =>
-    options.UseSqlite(connectionString));
+if (!string.IsNullOrEmpty(sqliteUrl))
+{
+  connectionString = sqliteUrl;
+}
+else
+{
+  var caminhoBancoLocal = Directory.GetCurrentDirectory().Replace("Fiap.Users.Api", "Fiap.Users.Infra");
+  connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Replace("{AppDir}", $"{caminhoBancoLocal}");
+}
 
+builder.Services.AddDbContext<Contexto>(options => options.UseSqlite(connectionString));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
   options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
-
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -84,7 +91,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 #region [JWT] 
-var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtKey = builder.Configuration["Jwt:Key"]?.Length > 0 ? builder.Configuration["Jwt:Key"] : "A506DE7F-4EAC-4F2E-B8CF-0B67D8696117";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 
 builder.Services.AddAuthentication(options =>
