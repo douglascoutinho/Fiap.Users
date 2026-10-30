@@ -163,5 +163,5 @@ kubectl logs deploy/users-api-deployment -f
 - **Imagem `:latest`:** com `imagePullPolicy: Always`, dificulta o rollback. Prefira uma tag de versão.
 - **Dois arquivos com prefixo `02-`:** o ConfigMap e o Secret da chave. Renumere para deixar a ordem de aplicação clara.
 - **Versões do RabbitMQ:** o Compose usa `3.11-management` e o Kubernetes (projeto Notifications) usa `3.13-management`.
-- **APIS:** para simular o processo completo é preciso baixar as apis: catalog, payments e user.
+- **APIS:** para simular o processo completo é preciso baixar as apis: catalog, payments e notifications.
 - **Gerar Token Padrão :** Login: douglas.loc@hotmail.com Senha: Admin@123.
