@@ -125,15 +125,14 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-if (app.Environment.IsDevelopment())
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-  app.UseSwagger();
-  app.UseSwaggerUI(options =>
-  {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Api - Fiap Games v1");
-    options.SwaggerEndpoint("/swagger/v2/swagger.json", "Api - Fiap Games v2");
-  });
-}
+  options.SwaggerEndpoint("/swagger/v1/swagger.json", "Api - Fiap Games v1");
+  options.SwaggerEndpoint("/swagger/v2/swagger.json", "Api - Fiap Games v2");
+});
+
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

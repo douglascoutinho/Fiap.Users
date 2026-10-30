@@ -5,7 +5,6 @@ metadata:
   labels:
     app: svc-users-api
 spec:
-  # SQLite é um arquivo local em cada pod: com mais de 1 réplica cada pod teria um banco diferente
   replicas: 1
   selector:
     matchLabels:

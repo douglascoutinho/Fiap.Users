@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-key-config
+  labels:
+    app: svc-users-api
+data:
+  JWT_KEY: "A506DE7F-4EAC-4F2E-B8CF-0B67D8696117"
